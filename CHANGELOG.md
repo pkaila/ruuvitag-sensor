@@ -2,6 +2,12 @@
 
 ### [Unreleased]
 
+## [1.2.1] - 2022-05-23
+* FIX: Handle too shot BLE data from RuuviTag as valida data
+* CHANGE: Add wheel to setup requirements
+* FIX: BlueZ - Do not use sudo if sudo not availabele or if already superuser
+* CHANGE: BlueZ - Use passive mode when scanning for Bluetooth devices
+
 ## [1.2.0] - 2021-04-29
 * FIX: Bleson return correct data if get_data returns before desired mac is seen
 * ADD: Enable debug logging from CLI
