@@ -20,14 +20,16 @@ RuuviTag Sensor is a Python library for communicating with [RuuviTag BLE Sensor 
 
 Install latest released version
 ```sh
-$ pip install ruuvitag_sensor
+$ python -m pip install ruuvitag_sensor
 ```
 
 Install latest developement version
 ```sh
-$ pip install git+https://github.com/ttu/ruuvitag-sensor
+$ python -m venv .venv
+$ source .venv/bin/activate
+$ python -m pip install git+https://github.com/ttu/ruuvitag-sensor
 # Or clone this repository and install locally
-$ pip install -e .
+$ python -m pip install -e .
 ```
 
 Full installation guide for [Raspberry PI & Raspbian](https://github.com/ttu/ruuvitag-sensor/blob/master/install_guide_pi.md)
@@ -236,6 +238,48 @@ ruuvitag_sensor.log.enable_console()
 datas = RuuviTagSensor.get_data_for_sensors()
 
 print(datas)
+```
+
+##### Log all events to log-file
+
+By default only errors are logged to `ruuvitag_sensor.log`-file. Level can be changed by changing FileHandlers log level.
+
+```py
+import logging
+from ruuvitag_sensor.log import log
+from ruuvitag_sensor.ruuvi import RuuviTagSensor
+
+for handler in log.handlers:
+    if isinstance(handler, logging.FileHandler):
+        handler.setLevel(logging.DEBUG)
+
+datas = RuuviTagSensor.get_data_for_sensors()
+```
+
+##### Custom event handler for a specific log event
+
+If custom functionality is required when a specific evet happens, e.g. exit when specific sensor is blacklisted, logging event handlers can be utilized for this functionality.
+
+```py
+from logging import StreamHandler
+from ruuvitag_sensor.log import log
+from ruuvitag_sensor.ruuvi import RuuviTagSensor
+
+
+class ExitHandler(StreamHandler):
+
+    def emit(self, record):
+        if (record.levelname != "DEBUG"):
+            return
+        msg = self.format(record)
+        if "Blacklisting MAC F4:A5:74:89:16:57E" in msg:
+            exit(1)
+
+
+exit_handler = ExitHandler()
+log.addHandler(exit_handler)
+
+data = RuuviTagSensor.get_data_for_sensors()
 ```
 
 ##### Command line application

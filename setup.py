@@ -28,6 +28,7 @@ setup(name='ruuvitag_sensor',
         'Programming Language :: Python :: 3'
       ],
       keywords='RuuviTag BLE',
+      setup_requires=['wheel'],
       install_requires=[
           'reactivex',
           'futures;python_version<"3.3"',
